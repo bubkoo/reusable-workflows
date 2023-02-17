@@ -14,6 +14,8 @@ inputs:
     required: false
     default: false
 
+# Reusable workflows has `secrets` but actions are limited to `inputs`.
+
 runs:
   using: composite
   steps:
