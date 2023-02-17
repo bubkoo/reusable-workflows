@@ -18,6 +18,14 @@ jobs:
           name: ${{ github.workflow }}
           enforce: true
           doc_path: '.github/workflow/workflow-readme.md'
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.client_payload.data.repo.full_name }}
+          ref: ${{ github.event.client_payload.data.sha }}
+          token: ${{ github.event.client_payload.app_token }}
+
       # Default environment variables can's be overwrited
       # https://docs.github.com/en/actions/learn-github-actions/environment-variables#naming-conventions-for-environment-variables
       # https://github.com/actions/toolkit/blob/main/packages/github/src/context.ts#L40
@@ -28,4 +36,5 @@ jobs:
           echo "GITHUB_EVENT_NAME=${{github.event.client_payload.data.event }}" >> $GITHUB_ENV
           echo "GITHUB_ACTION=${{github.event.client_payload.data.action }}" >> $GITHUB_ENV
           echo '${{ github.event.client_payload.payload }}' >| $GITHUB_EVENT_PATH
+
       - uses: hmarr/debug-action@v2
