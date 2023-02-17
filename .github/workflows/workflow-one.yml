@@ -5,7 +5,7 @@ on:
     types: [rsw.push, rsw.pull_request]
 
 jobs:
-  register:
+  test:
     runs-on: self-hosted
     steps:
       - name: Register Workflow
@@ -17,7 +17,7 @@ jobs:
           id: ${{ github.event.client_payload.id }}
           sha: ${{ github.event.client_payload.data.sha }}
           enforce: true
-          doc_path: '.github/workflow/workflow-readme.md'
+          doc_path: '.github/workflows/workflow-readme.md'
 
       - name: Checkout
         uses: actions/checkout@v3
