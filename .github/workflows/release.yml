@@ -25,7 +25,7 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - uses: .github/actions/prepare-repo
+      - uses: ./.github/actions/prepare-repo
         with:
           build: ${{ inputs.build-command }}
           test: ${{ inputs.test-command }}
