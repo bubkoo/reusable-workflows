@@ -6,25 +6,25 @@ on:
 
 jobs:
   register:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
-      # - name: Register Workflow
-      #   uses: bubkoo/bot/src/rsw@master
-      #   with:
-      #     id: ${{ github.event.client_payload.id }}
-      #     callback: ${{ github.event.client_payload.data.callback }}
-      #     sha: ${{ github.event.client_payload.data.sha }}
-      #     run_id: ${{ github.run_id }}
-      #     name: ${{ github.workflow }}
-      #     enforce: true
-      #     doc_path: '.github/workflow/workflow-readme.md'
+      - name: Register Workflow
+        uses: bubkoo/bot/src/rsw@master
+        with:
+          name: ${{ github.workflow }}
+          run_id: ${{ github.run_id }}
+          callback: ${{ github.event.client_payload.data.callback }}
+          id: ${{ github.event.client_payload.id }}
+          sha: ${{ github.event.client_payload.data.sha }}
+          enforce: true
+          doc_path: '.github/workflow/workflow-readme.md'
 
-      # - name: Checkout
-      #   uses: actions/checkout@v3
-      #   with:
-      #     repository: ${{ github.event.client_payload.data.repo.full_name }}
-      #     ref: ${{ github.event.client_payload.data.sha }}
-      #     token: ${{ github.event.client_payload.app_token }}
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.client_payload.data.repo.full_name }}
+          ref: ${{ github.event.client_payload.data.sha }}
+          token: ${{ github.event.client_payload.app_token }}
 
       # Default environment variables can's be overwrited
       # https://docs.github.com/en/actions/learn-github-actions/environment-variables#naming-conventions-for-environment-variables
