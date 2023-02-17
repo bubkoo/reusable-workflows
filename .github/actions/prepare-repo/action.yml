@@ -18,7 +18,7 @@ runs:
       with:
         persist-credentials: ${{ inputs.persist-credentials  }}
 
-    - uses: joekarow/act-which-package-mgr@v1
+    - uses: joekarow/act-which-package-mgr@v1.0.0
       id: pm
 
     - uses: bubkoo/rsw-a/.github/actions/setup-pnpm@master
