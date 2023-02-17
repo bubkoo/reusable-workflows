@@ -3,6 +3,12 @@ name: 🚀　Release
 on:
   workflow_call:
     inputs:
+      app-id:
+        type: string
+        required: false
+      private-key:
+        type: string
+        required: false
       build-command:
         type: string
         required: false
@@ -15,23 +21,24 @@ on:
         type: boolean
         required: false
         default: false
-
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      # - uses: ./actions/prepare-repo
-      #   with:
-      #     build: ${{ inputs.build-command }}
-      #     test: ${{ inputs.test-command }}
-      #     gpr: ${{ inputs.gpr }}
-      #     persist-credentials: false
+      - uses: .github/actions/prepare-repo
+        with:
+          build: ${{ inputs.build-command }}
+          test: ${{ inputs.test-command }}
+          gpr: ${{ inputs.gpr }}
+          persist-credentials: false
 
-      # - name: 🔑　Generate Token
-      #   uses: wow-actions/use-app-token@v2
-      #   with:
-      #     app_id: ${{ secrets.APP_ID }}
-      #     private_key: ${{ secrets.PRIVATE_KEY }}
+      - name: 🔑　Generate Token
+        if: ${{ inputs.app-id != '' && inputs.private-key != '' }}
+        uses: wow-actions/use-app-token@v2
+        with:
+          app_id: ${{ inputs.app-id }}
+          private_key: ${{ inputs.private-key }}
+
       - uses: hmarr/debug-action@v2
 
       # - name: 📦　Semantic Release
