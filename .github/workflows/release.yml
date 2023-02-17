@@ -18,7 +18,7 @@ on:
         required: false
         default: test
       gpr:
-        type: boolean
+        type: string
         required: false
         default: false
 jobs:
@@ -27,14 +27,12 @@ jobs:
     steps:
       - uses: bubkoo/rsw-a/.github/actions/prepare-repo@master
         with:
-          build: ${{ inputs.build-command }}
-          test: ${{ inputs.test-command }}
-          gpr: ${{ inputs.gpr }}
           persist-credentials: false
+          build-command: ${{ inputs.build-command }}
+          test-command: ${{ inputs.test-command }}
 
-      - name: 🔑　Generate Token
+      - uses: wow-actions/use-app-token@v2
         if: ${{ inputs.app-id != '' && inputs.private-key != '' }}
-        uses: wow-actions/use-app-token@v2
         with:
           app_id: ${{ inputs.app-id }}
           private_key: ${{ inputs.private-key }}

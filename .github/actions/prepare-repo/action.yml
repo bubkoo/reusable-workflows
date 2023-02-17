@@ -1,55 +1,40 @@
-name: 🔑　Prepare repo
 inputs:
-  build-command:
-    type: string
-    required: false
-    default: build
-  test-command:
-    type: string
-    required: false
-    default: test
-  gpr:
-    type: boolean
-    required: false
-    default: false
   persist-credentials:
     type: boolean
     required: false
     default: true
+  build-command:
+    type: string
+    required: true
+    default: build
+  test-command:
+    type: string
+    required: true
+    default: test
 runs:
   using: composite
   steps:
-    - name: ⤵️　Checkout
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
       with:
         persist-credentials: ${{ inputs.persist-credentials  }}
-    - name: 🎉　Setup nodejs
-      uses: actions/setup-node@v3
+
+    - uses: joekarow/act-which-package-mgr@v1
+      id: pm
+
+    - uses: bubkoo/rsw-a/.github/actions/setup-pnpm@master
+      if: ${{ steps.pm.outputs.package_manager == 'pnpm' }}
       with:
-        node-version: 16.x
-    - name: 🎉　Setup pnpm
-      uses: pnpm/action-setup@v2
+        build-command: ${{ inputs.build-command }}
+        test-command: ${{ inputs.test-command }}
+
+    - uses: bubkoo/rsw-a/.github/actions/setup-yarn@master
+      if: ${{ steps.pm.outputs.package_manager == 'yarn' }}
       with:
-        version: 7
-        run_install: false
-    - name: 🌱　Get pnpm store directory
-      id: pnpm-cache
-      shell: bash
-      run: |
-        echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-    - name: 🚸　Setup pnpm cache
-      uses: actions/cache@v3
+        build-command: ${{ inputs.build-command }}
+        test-command: ${{ inputs.test-command }}
+
+    - uses: bubkoo/rsw-a/.github/actions/setup-npm@master
+      if: ${{ steps.pm.outputs.package_manager == 'npm' }}
       with:
-        path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-pnpm-store-
-    - name: 🚧　Install
-      run: pnpm install --no-frozen-lockfile --ignore-scripts
-      shell: bash
-    - name: 📦　Build
-      run: pnpm run build
-      shell: bash
-    - name: ✅　Test
-      run: pnpm run test
-      shell: bash
+        build-command: ${{ inputs.build-command }}
+        test-command: ${{ inputs.test-command }}
