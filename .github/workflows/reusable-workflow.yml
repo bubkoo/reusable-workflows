@@ -1,14 +1,6 @@
 name: Reusable workflow example
 
-on:
-  workflow_call:
-    inputs:
-      config-path:
-        required: true
-        type: string
-    secrets:
-      token:
-        required: true
+on: workflow_call
 
 jobs:
   triage:
