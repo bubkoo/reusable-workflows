@@ -1,0 +1,18 @@
+name: 🔑　Generate Token
+description: Generate an app token used in the next steps.
+inputs:
+  APP_ID:
+    description: 'The PHP version to be setup'
+    required: false
+  PRIVATE_KEY: ${{ secrets.APP_ID }}
+    description: 'The PHP extensions to install'
+    required: false
+    default: ${{ secrets.PRIVATE_KEY }}
+runs:
+  using: composite
+  steps:
+    - name: 🔑　Generate Token
+      uses: wow-actions/use-app-token@v2
+      with:
+        app_id: ${{ inputs.APP_ID }}
+        private_key: ${{ inputs.PRIVATE_KEY }}
