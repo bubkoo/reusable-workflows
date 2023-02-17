@@ -24,7 +24,7 @@ runs:
     #     gpr: ${{ inputs.gpr }}
     #     persist-credentials: false
 
-    - uses: bubkoo/rsw-a/actions/generate-token
+    - uses: bubkoo/rsw-a/actions/generate-token@master
     - uses: hmarr/debug-action@v2
 
     # - name: 📦　Semantic Release
