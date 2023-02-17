@@ -5,7 +5,7 @@ on:
     types: [rsw.push, rsw.pull_request]
 
 jobs:
-  test:
+  register:
     runs-on: self-hosted
     steps:
       - name: Register Workflow
@@ -38,3 +38,7 @@ jobs:
           echo '${{ github.event.client_payload.payload }}' >| $GITHUB_EVENT_PATH
 
       - uses: hmarr/debug-action@v2
+
+  call-workflow:
+    needs: [register]
+    uses: ./.github/workflows/reusable-workflow.yml.yml
