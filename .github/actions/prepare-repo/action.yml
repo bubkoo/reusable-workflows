@@ -1,5 +1,4 @@
 name: 🔑　Prepare repo
-
 inputs:
   build-command:
     type: string
@@ -17,7 +16,6 @@ inputs:
     type: boolean
     required: false
     default: true
-
 runs:
   using: composite
   steps:
@@ -25,37 +23,30 @@ runs:
       uses: actions/checkout@v3
       with:
         persist-credentials: ${{ inputs.persist-credentials  }}
-
     - name: 🎉　Setup nodejs
       uses: actions/setup-node@v3
       with:
         node-version: 16.x
-
     - name: 🎉　Setup pnpm
       uses: pnpm/action-setup@v2
       with:
         version: 7
         run_install: false
-
     - name: 🌱　Get pnpm store directory
       id: pnpm-cache
       shell: bash
       run: |
         echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-    - name: 🚸　Setup pnpm cache
-      uses: actions/cache@v3
-      with:
-        path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-pnpm-store-
-
+    # - name: 🚸　Setup pnpm cache
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+    #     key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-pnpm-store-
     - name: 🚧　Install
       run: pnpm install --no-frozen-lockfile --ignore-scripts
-
     - name: 📦　Build
       run: pnpm run build
-
     - name: ✅　Test
       run: pnpm run test
