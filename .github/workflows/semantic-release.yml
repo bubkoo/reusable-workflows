@@ -8,7 +8,7 @@ on:
       app-id:
         required: false
       private-key:
-        required: false    
+        required: false
 
     inputs:
       build-command:
@@ -28,38 +28,9 @@ jobs:
           persist-credentials: false
           build-command: ${{ inputs.build-command }}
           test-command: ${{ inputs.test-command }}
-
-      - uses: wow-actions/use-app-token@v2
+      - uses: bubkoo/reusable-workflows/.github/actions/semantic-release@master
         with:
-          app_id: ${{ secrets.app-id }}
-          private_key: ${{ secrets.private-key }}
-
-      - uses: hmarr/debug-action@v2
-
-      - name: Release with App Token
-        if: ${{ env.BOT_TOKEN != '' }}
-        uses: cycjimmy/semantic-release-action@v3
-        with:
-          extends: '@bubkoo/semantic-release-config'
-          extra_plugins: |
-            @semantic-release/changelog
-            @semantic-release/git
-        env:
-          NPM_TOKEN: ${{ secrets.npm-token }}
-          GITHUB_TOKEN: ${{ env.BOT_TOKEN }}
-          GIT_AUTHOR_NAME: ${{ env.BOT_NAME }}[bot]
-          GIT_AUTHOR_EMAIL: ${{ env.BOT_NAME }}[bot]@users.noreply.github.com
-          GIT_COMMITTER_NAME: ${{ env.BOT_NAME }}[bot]
-          GIT_COMMITTER_EMAIL: ${{ env.BOT_NAME }}[bot]@users.noreply.github.com
-
-      - name: Release with GitHub Token
-        if: ${{ secrets.github-token != '' }}
-        uses: cycjimmy/semantic-release-action@v3
-        with:
-          extends: '@bubkoo/semantic-release-config'
-          extra_plugins: |
-            @semantic-release/changelog
-            @semantic-release/git
-        env:
-          NPM_TOKEN: ${{ secrets.npm-token }}
-          GITHUB_TOKEN: ${{ secrets.github-token }}
+          npm-token: ${{ secrets.npm-token }}
+          github-token: ${{ secrets.github-token }}
+          app-id: ${{ secrets.app-id }}
+          private-key: ${{ inputs.private-key }}
