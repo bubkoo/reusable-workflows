@@ -2,14 +2,13 @@ on:
   workflow_call:
     secrets:
       npm-token:
-        type: string
         required: true
       github-token:
-        type: string
+        required: false
       app-id:
-        type: string
+        required: false
       private-key:
-        type: string
+        required: false    
 
     inputs:
       build-command:
