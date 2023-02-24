@@ -23,6 +23,13 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
+      - name: "checking environment variables"
+        shell: bash
+        run: |
+          echo "${{secrets.npm-token}}"
+          echo "${{secrets.github-token}}"
+          echo "${{secrets.app-id-token}}"
+          echo "${{secrets.private-key}}"
       - uses: bubkoo/reusable-workflows/.github/actions/prepare-repo@master
         with:
           persist-credentials: false
