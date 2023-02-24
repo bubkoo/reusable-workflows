@@ -30,7 +30,6 @@ jobs:
           test-command: ${{ inputs.test-command }}
 
       - uses: wow-actions/use-app-token@v2
-        if: ${{ secrets.app-id != '' && secrets.private-key != '' }}
         with:
           app_id: ${{ secrets.app-id }}
           private_key: ${{ secrets.private-key }}
