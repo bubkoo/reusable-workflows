@@ -12,6 +12,14 @@ inputs:
 runs:
   using: composite
   steps:
+    - run: echo "release-config=${{ inputs.extends }}" >> $GITHUB_ENV
+      if: ${{ inputs.extends != '' && inputs.extends != 'false' }}
+      shell: bash
+
+    - run: echo "release-config=@bubkoo/semantic-release-config" >> $GITHUB_ENV
+      if: ${{ inputs.extends == '' || inputs.extends == 'false' }}
+      shell: bash
+
     - uses: wow-actions/use-app-token@v2
       if: ${{ inputs.app-id != '' && inputs.private-key != '' }}
       with:
@@ -24,7 +32,7 @@ runs:
       if: ${{ env.BOT_TOKEN != '' }}
       uses: cycjimmy/semantic-release-action@v3
       with:
-        extends: ${{ inputs.extends || '@bubkoo/semantic-release-config' }}
+        extends: ${{ env.release-config }}
         extra_plugins: |
           @semantic-release/changelog
           @semantic-release/git
