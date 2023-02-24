@@ -31,11 +31,6 @@ jobs:
           persist-credentials: false
           build-command: ${{ inputs.build-command }}
           test-command: ${{ inputs.test-command }}
-      - uses: wow-actions/use-app-token@v2
-        if: ${{ secrets.app-id != '' && secrets.private-key != '' }}
-        with:
-          app_id: ${{ secrets.app-id }}
-          private_key: ${{ secrets.private-key }}
       - uses: bubkoo/reusable-workflows/.github/actions/semantic-release@master
         with:
           extends: ${{ inputs.extends }}
