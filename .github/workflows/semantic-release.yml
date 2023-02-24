@@ -46,7 +46,7 @@ jobs:
             @semantic-release/changelog
             @semantic-release/git
         env:
-          NPM_TOKEN: ${{ input.npm-token }}
+          NPM_TOKEN: ${{ inputs.npm-token }}
           GITHUB_TOKEN: ${{ env.BOT_TOKEN }}
           GIT_AUTHOR_NAME: ${{ env.BOT_NAME }}[bot]
           GIT_AUTHOR_EMAIL: ${{ env.BOT_NAME }}[bot]@users.noreply.github.com
@@ -54,7 +54,7 @@ jobs:
           GIT_COMMITTER_EMAIL: ${{ env.BOT_NAME }}[bot]@users.noreply.github.com
 
       - name: Release with GitHub Token
-        if: ${{ input.github-token != '' }}
+        if: ${{ inputs.github-token != '' }}
         uses: cycjimmy/semantic-release-action@v3
         with:
           extends: '@bubkoo/semantic-release-config'
@@ -62,5 +62,5 @@ jobs:
             @semantic-release/changelog
             @semantic-release/git
         env:
-          NPM_TOKEN: ${{ input.npm-token }}
-          GITHUB_TOKEN: ${{ input.github-token }}
+          NPM_TOKEN: ${{ inputs.npm-token }}
+          GITHUB_TOKEN: ${{ inputs.github-token }}
