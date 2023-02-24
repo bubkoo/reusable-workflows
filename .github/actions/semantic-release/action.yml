@@ -24,7 +24,7 @@ runs:
       if: ${{ env.BOT_TOKEN != '' }}
       uses: cycjimmy/semantic-release-action@v3
       with:
-        extends: '@bubkoo/semantic-release-config'
+        extends: ${{ inputs.extends || '@bubkoo/semantic-release-config' }}
         extra_plugins: |
           @semantic-release/changelog
           @semantic-release/git
