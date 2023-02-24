@@ -9,7 +9,6 @@ on:
         required: false
       private-key:
         required: false
-
     inputs:
       build-command:
         type: string
@@ -23,13 +22,6 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - name: "checking environment variables"
-        shell: bash
-        run: |
-          echo "${{secrets.npm-token}}"
-          echo "${{secrets.github-token}}"
-          echo "${{secrets.app-id-token}}"
-          echo "${{secrets.private-key}}"
       - uses: wow-actions/use-app-token@v2
         with:
           app_id: ${{ secrets.app-id }}
@@ -39,8 +31,14 @@ jobs:
           persist-credentials: false
           build-command: ${{ inputs.build-command }}
           test-command: ${{ inputs.test-command }}
+      - uses: wow-actions/use-app-token@v2
+        if: ${{ secrets.app-id != '' && secrets.private-key != '' }}
+        with:
+          app_id: ${{ secrets.app-id }}
+          private_key: ${{ secrets.private-key }}
       - uses: bubkoo/reusable-workflows/.github/actions/semantic-release@master
         with:
+          extends: ${{ inputs.extends }}
           npm-token: ${{ secrets.npm-token }}
           github-token: ${{ secrets.github-token }}
           app-id: ${{ secrets.app-id }}
