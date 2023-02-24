@@ -11,6 +11,13 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: "checking environment variables"
+      shell: bash
+      run: |
+        echo "${{inputs.npm-token}}"
+        echo "${{inputs.github-token}}"
+        echo "${{inputs.app-id-token}}"
+        echo "${{inputs.private-key}}"
     - uses: wow-actions/use-app-token@v2
       if: ${{ inputs.app-id != '' && inputs.private-key != '' }}
       with:
