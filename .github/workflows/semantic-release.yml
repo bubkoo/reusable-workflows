@@ -27,10 +27,10 @@ jobs:
         with:
           persist-credentials: false
           build-command: ${{ inputs.build-command }}
-          test-command: ${{ secrets.app-id }}
+          test-command: ${{ inputs.test-command }}
       - uses: bubkoo/reusable-workflows/.github/actions/semantic-release@master
         with:
           npm-token: ${{ secrets.npm-token }}
           github-token: ${{ secrets.github-token }}
           app-id: ${{ secrets.app-id }}
-          private-key: ${{ inputs.private-key }}
+          private-key: ${{ secrets.private-key }}
