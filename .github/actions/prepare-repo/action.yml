@@ -11,6 +11,7 @@ inputs:
     type: string
     required: true
     default: test
+
 runs:
   using: composite
   steps:
@@ -21,19 +22,19 @@ runs:
     - uses: joekarow/act-which-package-mgr@v1.0.0
       id: pm
 
-    - uses: bubkoo/rsw-a/.github/actions/setup-pnpm@master
+    - uses: bubkoo/reusable-workflows/.github/actions/setup-pnpm@master
       if: ${{ steps.pm.outputs.package_manager == 'pnpm' }}
       with:
         build-command: ${{ inputs.build-command }}
         test-command: ${{ inputs.test-command }}
 
-    - uses: bubkoo/rsw-a/.github/actions/setup-yarn@master
+    - uses: bubkoo/reusable-workflows/.github/actions/setup-yarn@master
       if: ${{ steps.pm.outputs.package_manager == 'yarn' }}
       with:
         build-command: ${{ inputs.build-command }}
         test-command: ${{ inputs.test-command }}
 
-    - uses: bubkoo/rsw-a/.github/actions/setup-npm@master
+    - uses: bubkoo/reusable-workflows/.github/actions/setup-npm@master
       if: ${{ steps.pm.outputs.package_manager == 'npm' }}
       with:
         build-command: ${{ inputs.build-command }}

@@ -1,0 +1,65 @@
+inputs:
+  npm-token:
+    type: string
+    default: ${{ secrets.NPM_TOKEN }}
+  github-token:
+    type: string
+    default: ${{ secrets.GITHUB_TOKEN }}
+  app-id:
+    type: string
+    default: ${{ secrets.APP_ID }}
+  private-key:
+    type: string
+    default: ${{ secrets.PRIVATE_KEY }}
+  build-command:
+    type: string
+    default: build
+  test-command:
+    type: string
+    default: test
+  extends:
+
+runs:
+  using: composite
+  steps:
+    - uses: bubkoo/reusable-workflows/.github/actions/prepare-repo@master
+      with:
+        persist-credentials: false
+        build-command: ${{ inputs.build-command }}
+        test-command: ${{ inputs.test-command }}
+
+    - uses: wow-actions/use-app-token@v2
+      if: ${{ inputs.app-id != '' && inputs.private-key != '' }}
+      with:
+        app_id: ${{ inputs.app-id }}
+        private_key: ${{ inputs.private-key }}
+
+    - uses: hmarr/debug-action@v2
+
+    - name: Release with App Token
+      if: ${{ env.BOT_TOKEN != '' }}
+      uses: cycjimmy/semantic-release-action@v3
+      with:
+        extends: '@bubkoo/semantic-release-config'
+        extra_plugins: |
+          @semantic-release/changelog
+          @semantic-release/git
+      env:
+        NPM_TOKEN: ${{ input.npm-token }}
+        GITHUB_TOKEN: ${{ env.BOT_TOKEN }}
+        GIT_AUTHOR_NAME: ${{ env.BOT_NAME }}[bot]
+        GIT_AUTHOR_EMAIL: ${{ env.BOT_NAME }}[bot]@users.noreply.github.com
+        GIT_COMMITTER_NAME: ${{ env.BOT_NAME }}[bot]
+        GIT_COMMITTER_EMAIL: ${{ env.BOT_NAME }}[bot]@users.noreply.github.com
+
+    - name: Release with GitHub Token
+      if: ${{ input.github-token != '' }}
+      uses: cycjimmy/semantic-release-action@v3
+      with:
+        extends: '@bubkoo/semantic-release-config'
+        extra_plugins: |
+          @semantic-release/changelog
+          @semantic-release/git
+      env:
+        NPM_TOKEN: ${{ input.npm-token }}
+        GITHUB_TOKEN: ${{ input.github-token }}

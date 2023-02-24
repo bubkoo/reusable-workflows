@@ -27,7 +27,8 @@ runs:
       with:
         path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
         key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: ${{ runner.os }}-pnpm-store-
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
 
     - run: pnpm install --no-frozen-lockfile --ignore-scripts
       shell: bash
@@ -36,6 +37,6 @@ runs:
       if: ${{ inputs.build-command != '' && inputs.build-command != 'false' }}
       shell: bash
 
-    - run: pnpm run ${{ inputs.build-test }}
-      if: ${{ inputs.build-test != '' && inputs.build-test != 'false' }}
+    - run: pnpm run ${{ inputs.test-command }}
+      if: ${{ inputs.test-command != '' && inputs.test-command != 'false' }}
       shell: bash

@@ -13,29 +13,27 @@ runs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16.x
-    - uses: pnpm/action-setup@v2
-      with:
-        version: 7
-        run_install: false
 
-    - run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-      id: pnpm-cache
+    - name: Get npm cache directory
+      id: npm-cache-dir
+      run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
       shell: bash
 
-    - name: cache pnpm
-      uses: actions/cache@v3
+    - uses: actions/cache@v3
+      id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
       with:
-        path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: ${{ runner.os }}-pnpm-store-
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
 
-    - run: pnpm install --no-frozen-lockfile --ignore-scripts
+    - run: npm install --no-frozen-lockfile --ignore-scripts
       shell: bash
 
-    - run: pnpm run ${{ inputs.build-command }}
+    - run: npm run ${{ inputs.build-command }}
       if: ${{ inputs.build-command != '' && inputs.build-command != 'false' }}
       shell: bash
 
-    - run: pnpm run ${{ inputs.build-test }}
-      if: ${{ inputs.build-test != '' && inputs.build-test != 'false' }}
+    - run: yarn run ${{ inputs.test-command }}
+      if: ${{ inputs.test-command != '' && inputs.test-command != 'false' }}
       shell: bash

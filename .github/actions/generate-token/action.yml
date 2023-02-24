@@ -1,15 +1,14 @@
-name: 🔑　Generate Token
-description: Generate an app token used in the next steps.
 inputs:
   APP_ID:
-    required: true
+    type: string
+    default: ${{ secrets.APP_ID }}
   PRIVATE_KEY:
-    required: true
+    type: string
+    default: ${{ secrets.PRIVATE_KEY }}
 runs:
   using: composite
   steps:
-    - name: 🔑　Generate Token
-      uses: wow-actions/use-app-token@v2
+    - uses: wow-actions/use-app-token@v2
       with:
         app_id: ${{ inputs.APP_ID }}
         private_key: ${{ inputs.PRIVATE_KEY }}
