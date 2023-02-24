@@ -30,6 +30,10 @@ jobs:
           echo "${{secrets.github-token}}"
           echo "${{secrets.app-id-token}}"
           echo "${{secrets.private-key}}"
+      - uses: wow-actions/use-app-token@v2
+        with:
+          app_id: ${{ secrets.app-id }}
+          private_key: ${{ secrets.private-key }}
       - uses: bubkoo/reusable-workflows/.github/actions/prepare-repo@master
         with:
           persist-credentials: false
