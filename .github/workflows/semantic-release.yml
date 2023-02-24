@@ -3,16 +3,13 @@ on:
     secrets:
       npm-token:
         type: string
-        default: ${{ secrets.NPM_TOKEN }}
+        required: true
       github-token:
         type: string
-        default: ${{ secrets.GITHUB_TOKEN }}
       app-id:
         type: string
-        default: ${{ secrets.APP_ID }}
       private-key:
         type: string
-        default: ${{ secrets.PRIVATE_KEY }}
 
     inputs:
       build-command:
@@ -21,9 +18,8 @@ on:
       test-command:
         type: string
         default: test
-      extends-default-config:
-        type: boolean
-        default: true
+      extends:
+        type: string
 jobs:
   run:
     runs-on: ubuntu-latest
