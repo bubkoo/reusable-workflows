@@ -1,16 +1,11 @@
 inputs:
   persist-credentials:
     type: boolean
-    required: false
     default: true
   build-command:
-    type: string
     required: true
-    default: build
   test-command:
-    type: string
     required: true
-    default: test
 
 runs:
   using: composite

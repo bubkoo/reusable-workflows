@@ -9,23 +9,19 @@ on:
         required: false
       private-key:
         required: false
+
     inputs:
       build-command:
-        type: string
         default: build
       test-command:
-        type: string
         default: test
       extends:
         type: string
+
 jobs:
-  run:
+  semantic-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: wow-actions/use-app-token@v2
-        with:
-          app_id: ${{ secrets.app-id }}
-          private_key: ${{ secrets.private-key }}
       - uses: bubkoo/reusable-workflows/.github/actions/prepare-repo@master
         with:
           persist-credentials: false

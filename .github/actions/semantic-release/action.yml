@@ -27,7 +27,7 @@ runs:
         app_id: ${{ inputs.app-id }}
         private_key: ${{ inputs.private-key }}
 
-    - uses: hmarr/debug-action@v2
+    # - uses: hmarr/debug-action@v2
 
     - name: Release with App Token
       if: ${{ env.BOT_TOKEN != '' }}

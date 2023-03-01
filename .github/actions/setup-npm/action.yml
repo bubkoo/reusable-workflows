@@ -2,11 +2,9 @@ inputs:
   build-command:
     type: string
     required: true
-    default: build
   test-command:
     type: string
     required: true
-    default: test
 runs:
   using: composite
   steps:
