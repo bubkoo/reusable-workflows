@@ -12,8 +12,10 @@ on:
 
     inputs:
       build-command:
+        type: string
         default: build
       test-command:
+        type: string
         default: test
       extends:
         type: string
