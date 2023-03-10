@@ -25,7 +25,7 @@ runs:
         GIT_COMMITTER_EMAIL: ${{ env.BOT_NAME }}[bot]@users.noreply.github.com
 
     - name: Release with GitHub Token
-      if: ${{ input.github-token != '' }}
+      if: ${{ inputs.github-token != '' }}
       uses: wow-actions/release-github-action@v2
       env:
-        GITHUB_TOKEN: ${{ input.github-token }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
