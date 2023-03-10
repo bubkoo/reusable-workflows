@@ -17,9 +17,9 @@ runs:
         persist-credentials: ${{ inputs.persist-credentials }}
 
     # detect package manager
-    - uses: joekarow/act-which-package-mgr@v1.0.0
-      id: pm
-    - run: echo "PACKAGE_MANAGER=${{ steps.pm.outputs.package_manager }}" >> $GITHUB_ENV
+    - uses: wow-actions/get-package-manager@v1
+      id: getpm
+    - run: echo "PACKAGE_MANAGER=${{ steps.getpm.outputs.pm }}" >> $GITHUB_ENV
       shell: bash
 
     # setup cache and install deps
