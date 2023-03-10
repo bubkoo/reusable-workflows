@@ -17,7 +17,6 @@ runs:
     # prepare repo
     - uses: bubkoo/reusable-workflows/.github/actions/prepare-repo@master
       with:
-        persist-credentials: false
         test-command: ${{ inputs.test-command }}
         build-command: ${{ inputs.build-command }}
         manual-command: ${{ inputs.manual-command }}
