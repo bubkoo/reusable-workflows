@@ -5,9 +5,23 @@ inputs:
     type: string
   private-key:
     type: string
+  build-command:
+    type: string
+  test-command:
+    type: string
+  manual-command:
+    type: string
 runs:
   using: composite
   steps:
+    # prepare repo
+    - uses: bubkoo/reusable-workflows/.github/actions/prepare-repo@master
+      with:
+        persist-credentials: false
+        test-command: ${{ inputs.test-command }}
+        build-command: ${{ inputs.build-command }}
+        manual-command: ${{ inputs.manual-command }}
+
     - uses: wow-actions/use-app-token@v2
       if: ${{ inputs.app-id != '' && inputs.private-key != '' }}
       with:
