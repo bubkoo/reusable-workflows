@@ -13,8 +13,6 @@ inputs:
     type: string
   manual-command:
     type: string
-  release-config:
-    type: string
 runs:
   using: composite
   steps:
@@ -26,33 +24,25 @@ runs:
         build-command: ${{ inputs.build-command }}
         manual-command: ${{ inputs.manual-command }}
 
-    # prepare release config
-    - run: echo "RELEASE_CONFIG=" >> $GITHUB_ENV
-      if: ${{ inputs.release-config == 'false' }}
+    # install srm cli and required deps
+    - run: yarn global add @semantic-release-monorepo/cli semantic-release @semantic-release/changelog @semantic-release/git -s
+      if: ${{ env.PACKAGE_MANAGER == 'yarn' }}
       shell: bash
-    - run: echo "RELEASE_CONFIG=@bubkoo/semantic-release-config" >> $GITHUB_ENV
-      if: ${{ inputs.release-config == '' }}
-      shell: bash
-    - run: echo "RELEASE_CONFIG=${{ inputs.release-config }}" >> $GITHUB_ENV
-      if: ${{ inputs.release-config != '' && inputs.release-config != 'false' }}
+    - run: ${{ env.PACKAGE_MANAGER }} install @semantic-release-monorepo/cli semantic-release @semantic-release/changelog @semantic-release/git -g -s
+      if: ${{ env.PACKAGE_MANAGER == 'npm' || env.PACKAGE_MANAGER == 'pnpm' }}
       shell: bash
 
-    - uses: wow-actions/use-app-token@v2
+    - name: Generate app token
+      uses: wow-actions/use-app-token@v2
       if: ${{ inputs.app-id != '' && inputs.private-key != '' }}
       with:
         app_id: ${{ inputs.app-id }}
         private_key: ${{ inputs.private-key }}
 
-    # - uses: hmarr/debug-action@v2
-
     - name: Release with App Token
       if: ${{ env.BOT_TOKEN != '' }}
-      uses: cycjimmy/semantic-release-action@v3
-      with:
-        extends: ${{ env.RELEASE_CONFIG }}
-        extra_plugins: |
-          @semantic-release/changelog
-          @semantic-release/git
+      run: srm --combine-commits
+      shell: bash
       env:
         GITHUB_TOKEN: ${{ env.BOT_TOKEN }}
         NPM_TOKEN: ${{ inputs.npm-token }}
@@ -64,12 +54,8 @@ runs:
 
     - name: Release with GitHub Token
       if: ${{ inputs.github-token != '' }}
-      uses: cycjimmy/semantic-release-action@v3
-      with:
-        extends: ${{ env.RELEASE_CONFIG }}
-        extra_plugins: |
-          @semantic-release/changelog
-          @semantic-release/git
+      run: srm --combine-commits
+      shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         NPM_TOKEN: ${{ inputs.npm-token }}

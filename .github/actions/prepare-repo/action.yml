@@ -3,34 +3,44 @@ inputs:
     type: boolean
     default: true
   build-command:
-    required: true
+    type: string
   test-command:
-    required: true
-
+    type: string
+  manual-command:
+    type: string
 runs:
   using: composite
   steps:
+    # checkout
     - uses: actions/checkout@v3
       with:
-        persist-credentials: ${{ inputs.persist-credentials  }}
+        persist-credentials: ${{ inputs.persist-credentials }}
 
+    # detect package manager
     - uses: joekarow/act-which-package-mgr@v1.0.0
       id: pm
+    - run: echo "PACKAGE_MANAGER=${{ steps.pm.outputs.package_manager }}" >> $GITHUB_ENV
+      shell: bash
 
+    # setup cache and install deps
     - uses: bubkoo/reusable-workflows/.github/actions/setup-pnpm@master
-      if: ${{ steps.pm.outputs.package_manager == 'pnpm' }}
-      with:
-        build-command: ${{ inputs.build-command }}
-        test-command: ${{ inputs.test-command }}
-
+      if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
     - uses: bubkoo/reusable-workflows/.github/actions/setup-yarn@master
-      if: ${{ steps.pm.outputs.package_manager == 'yarn' }}
-      with:
-        build-command: ${{ inputs.build-command }}
-        test-command: ${{ inputs.test-command }}
-
+      if: ${{ env.PACKAGE_MANAGER == 'yarn' }}
     - uses: bubkoo/reusable-workflows/.github/actions/setup-npm@master
-      if: ${{ steps.pm.outputs.package_manager == 'npm' }}
-      with:
-        build-command: ${{ inputs.build-command }}
-        test-command: ${{ inputs.test-command }}
+      if: ${{ env.PACKAGE_MANAGER == 'npm' }}
+
+    # run test command specified in package.json
+    - run: ${{ env.PACKAGE_MANAGER }} run ${{ inputs.test-command }}
+      if: ${{ inputs.test-command != '' && inputs.test-command != 'false' }}
+      shell: bash
+
+    # run build command specified in package.json
+    - run: ${{ env.PACKAGE_MANAGER }} run ${{ inputs.build-command }}
+      if: ${{ inputs.build-command != '' && inputs.build-command != 'false' }}
+      shell: bash
+
+    # execute manual command
+    - run: ${{ env.PACKAGE_MANAGER }} ${{ inputs.manual-command }}
+      if: ${{ inputs.manual-command != ''}}
+      shell: bash

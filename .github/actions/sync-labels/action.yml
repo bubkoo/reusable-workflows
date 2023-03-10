@@ -1,0 +1,21 @@
+inputs:
+  manifest:
+    type: string
+  app-id:
+    type: string
+  private-key:
+    type: string
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+    - uses: wow-actions/use-app-token@v2
+      with:
+        app_id: ${{ inputs.app-id }}
+        private_key: ${{ inputs.private-key }}
+    - uses: micnncim/action-label-syncer@v1
+      with:
+        repository: |
+          bubkoo/reusable-workflows
+        token: ${{ env.BOT_TOKEN }}
+        manifest: ${{ inputs.manifest }}
