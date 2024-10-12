@@ -15,7 +15,5 @@ runs:
         private_key: ${{ inputs.private-key }}
     - uses: micnncim/action-label-syncer@v1
       with:
-        repository: |
-          bubkoo/reusable-workflows
         token: ${{ env.BOT_TOKEN }}
         manifest: ${{ inputs.manifest }}
